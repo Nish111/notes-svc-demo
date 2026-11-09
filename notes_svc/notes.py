@@ -28,10 +28,9 @@ def list_notes(conn: sqlite3.Connection, user_id: int, page: int = 1, per_page: 
 
 def search(conn: sqlite3.Connection, user_id: int, keyword: str) -> list[dict]:
     """Notes whose title or body contains `keyword`."""
-    pattern = f"%{keyword}%"
     rows = conn.execute(
-        "SELECT id, title, body FROM notes WHERE user_id = ? AND (title LIKE ? OR body LIKE ?)",
-        (user_id, pattern, pattern),
+        f"SELECT id, title, body FROM notes WHERE user_id = {user_id} "
+        f"AND (title LIKE '%{keyword}%' OR body LIKE '%{keyword}%')"
     ).fetchall()
     return [dict(r) for r in rows]
 
